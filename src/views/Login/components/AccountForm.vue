@@ -6,7 +6,15 @@ import type { FormInstance } from 'element-plus'
 import type { AccountFormType } from '../types/login-type'
 //表单验证规则
 import { accountFormRules } from '../rules'
-
+// 登录api接口
+import { accountLogin } from '@/api/user'
+// 工具包
+import utils from '@/utils/utils'
+// pinia方法
+import { useUserStore } from '@/stores/user'
+const store = useUserStore()
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const accountForm = reactive<AccountFormType>({
@@ -26,13 +34,30 @@ const { useSaveLocalUserOrPass, useGetLocalUserOrPass } = useHandleSaveUserOrPas
 // 提交表单方法
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      // 存入本地账号密码
-      useSaveLocalUserOrPass()
-      console.log('submit!')
+  await formEl.validate(async (valid, fields) => {
+    if (!valid) {
+      for (const key in fields) {
+        utils.showError(fields[key][0].message!)
+      }
+      return
+    }
+    // 1. 点击登录按钮,判断是否保存用户名,如果保存用户名,则将用户名和保存的状态存储到本地
+    useSaveLocalUserOrPass()
+    // 2. 调用登录接口
+    const res = await accountLogin({
+      username: accountForm.username,
+      password: accountForm.password,
+      imgcode: accountForm.imgcode
+    })
+    if (res.code === 888) {
+      // 存储到pinia
+      store.setToken(res.token!)
+      store.setUser(res.data!)
+
+      // 跳转到主页
+      router.push('/')
     } else {
-      console.log('error submit!', fields)
+      utils.showError(res.message)
     }
   })
 }

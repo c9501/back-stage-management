@@ -1,4 +1,6 @@
-import { ElMessage } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
+import type { LoadingInstance } from 'element-plus/lib/components/loading/src/loading.js'
+
 const utils = {
   // 存储数据
   saveData(key: string, value: any) {
@@ -17,7 +19,24 @@ const utils = {
     localStorage.removeItem(key)
   },
   // 开启全局loading
+  loadingInstance: null as LoadingInstance | null,
+  openLoading(msg?: string) {
+    if (this.loadingInstance) {
+      this.loadingInstance = ElLoading.service({
+        body: true,
+        fullscreen: true,
+        background: 'rgba(0,0,0,0.7)',
+        text: msg ? msg : '正在处理中...'
+      })
+    }
+  },
   // 关闭全局loading
+  closeLoading() {
+    if (this.loadingInstance) {
+      this.loadingInstance.close()
+      this.loadingInstance = null
+    }
+  },
   // 成功信息提示
   showSuccess(message: string) {
     return ElMessage({
