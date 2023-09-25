@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+
 //全局样式
 import './styles/default.scss'
 
@@ -11,6 +11,9 @@ import { globalRegister } from './global'
 
 //引入mock
 import './mock'
+
+// 引入权限文件
+import './permission'
 
 const app = createApp(App)
 

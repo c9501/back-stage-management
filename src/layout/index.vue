@@ -4,7 +4,7 @@ import ComHeader from './components/ComHeader/index.vue'
 import { computed } from 'vue'
 import { useMenuStore } from '@/stores/menu'
 const store = useMenuStore()
-// 使用计算属性获取pinia响应的宽度
+
 const asideWidth = computed(() => {
   return store.asideWidth
 })
@@ -20,7 +20,6 @@ const asideWidth = computed(() => {
         <ComHeader />
       </el-header>
       <el-main>
-        123
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -32,13 +31,15 @@ const asideWidth = computed(() => {
   height: 100%;
 
   .el-aside {
-    background: green;
+    background: var(--junjun-topbar-bg);
     transition: width 0.4s linear;
+    border-right: 1px solid grey;
   }
 
   .el-header {
     height: 60px;
     padding: 0 10px;
+    background: var(--junjun-topbar-bg);
   }
 
   .el-main {

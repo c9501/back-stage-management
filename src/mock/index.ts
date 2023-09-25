@@ -3,6 +3,7 @@ import Mock from 'mockjs'
 const Random = Mock.Random
 // 导入数据
 import user from './userData'
+import './menuData'
 Mock.mock('/api/login/username', (options: any) => {
   // 没有参数时
   if (!options || !options.body) {
